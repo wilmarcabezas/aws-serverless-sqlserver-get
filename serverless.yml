@@ -1,0 +1,26 @@
+service: addresscontrol
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  stage: dev
+  region: us-east-1
+
+
+functions:
+  AllAddress:
+    handler: handler.AllAddress
+    events:
+      - http:
+          method: get
+          path: scanaddress
+          cors: true 
+  OneAddress:
+    handler: handler.OneAddress
+    events:
+      - http:
+          method: post
+          path: getaddress
+          cors: true 
+  
