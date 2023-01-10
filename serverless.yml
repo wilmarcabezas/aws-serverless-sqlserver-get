@@ -7,8 +7,8 @@ provider:
   stage: dev
   region: us-east-1
   environment:
-    TOPIC_ARN: 'arn:aws:sns:us-east-1:711459267474:NotifyCourier'
-    TARGET_ARN: 'arn:aws:sns:us-east-1:711459267474:NotifyCourier:endpoint'
+    TOPIC_ARN: 'arn:aws:sns:us-east-1:AccoutID:NotifyCourier'
+    TARGET_ARN: 'arn:aws:sns:us-east-1:AccoutID:NotifyCourier:endpoint'
 
 functions:
   AllAddress:
