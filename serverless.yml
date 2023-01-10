@@ -6,7 +6,9 @@ provider:
   runtime: nodejs14.x
   stage: dev
   region: us-east-1
-
+  environment:
+    TOPIC_ARN: 'arn:aws:sns:us-east-1:711459267474:NotifyCourier'
+    TARGET_ARN: 'arn:aws:sns:us-east-1:711459267474:NotifyCourier:endpoint'
 
 functions:
   AllAddress:
@@ -23,4 +25,19 @@ functions:
           method: post
           path: getaddress
           cors: true 
+  sendEmail:
+    handler: senderEmailTask.sendEmail
+    events:
+      - http:
+          method: post
+          path: sendemail
+          cors: true
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - ses:*
+        Resource: '*'
+
+plugins:
+  - serverless-iam-roles-per-function
   

@@ -4,9 +4,9 @@ const sql = require('mssql');
 
 const dbSettings = {
   user: 'user',
-  password: 'clave',
+  password: 'pwd',
   server: 'server',
-  database: 'database',
+  database: 'base',
   options: {
     encrypt: false,
     trustServerCertificate: true,
