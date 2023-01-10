@@ -1,29 +1,85 @@
-# AWS Serverless SQL Server GET
-Este repositorio contiene un ejemplo de cómo usar AWS Lambda y el marco de trabajo Serverless para recuperar datos de una base de datos de SQL Server y devolverlos en la respuesta HTTP.
+# AWS Serverless SQL Server GET 🚀
 
-## :rocket: Inicio rápido
+Este repositorio proporciona una solución de servidorless para realizar consultas GET a una base de datos SQL Server en Amazon Web Services (AWS).
 
-1. Instale el marco de trabajo Serverless: npm install -g serverless
-2. Clone este repositorio: git clone https://github.com/wilmarcabezas/aws-serverless-sqlserver-get.git
-3. Vaya al directorio: cd aws-serverless-sqlserver-get
-4. Instale las dependencias: npm install
-5. Configure sus credenciales de AWS
-6. Despliegue la función: serverless deploy
+## Requisitos previos
+- Cuenta de AWS
+- Acceso a una instancia de SQL Server en AWS
 
-## :page_facing_up: Configuración
-Necesitará configurar algunas cosas antes de poder desplegar esta función.
+## Instalación
+1. Clona este repositorio en tu máquina local: git clone https://github.com/wilmarcabezas/aws-serverless-sqlserver-get.git
+2. Instala las dependencias necesarias ejecutando el siguiente comando: npm install
 
-### Variables de entorno
-Renombre el archivo env.example a env.yml y complete las siguientes variables:
 
-1. SQL_SERVER_HOST: El nombre de host o la dirección IP de su instancia de SQL Server
-2. SQL_SERVER_USERNAME: El nombre de usuario para conectarse a la base de datos
-3. SQL_SERVER_PASSWORD: La contraseña del usuario
-4. SQL_SERVER_DATABASE: El nombre de la base de datos que desea consultar Permisos de IAM
-5. Su usuario de IAM de AWS necesitará los siguientes permisos:
+## Uso
+1. Configura las credenciales de acceso a AWS y a tu instancia de SQL Server en el archivo `config.js`.
+2. Ejecuta el siguiente comando para desplegar la solución de servidorless: serverless deploy
 
-      * rds: Connect
-      * rds:DescribeDBInstances
-      * rds:DescribeDBLogFiles
-      * rds:ListTagsForResource
-      * Puede otorgar estos permisos mediante una política de IAM similar a la siguiente:
+
+Una vez desplegada, podrás realizar consultas GET a tu base de datos SQL Server utilizando la URL proporcionada por la solución de servidorless.
+
+Para más información sobre cómo utilizar esta solución, consulta la [documentación de AWS sobre servidorless](https://aws.amazon.com/es/serverless/) y la [documentación de Microsoft sobre SQL Server](https://docs.microsoft.com/es-es/sql/sql-server/?view=sql-server-ver15).
+
+```` yml
+service: addresscontrol
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  stage: dev
+  region: us-east-1
+  environment:
+    TOPIC_ARN: 'arn:aws:sns:us-east-1:AccoutID:NotifyCourier'
+    TARGET_ARN: 'arn:aws:sns:us-east-1:AccoutID:NotifyCourier:endpoint'
+
+functions:
+  AllAddress:
+    handler: handler.AllAddress
+    events:
+      - http:
+          method: get
+          path: scanaddress
+          cors: true 
+  OneAddress:
+    handler: handler.OneAddress
+    events:
+      - http:
+          method: post
+          path: getaddress
+          cors: true 
+  sendEmail:
+    handler: senderEmailTask.sendEmail
+    events:
+      - http:
+          method: post
+          path: sendemail
+          cors: true
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - ses:*
+        Resource: '*'
+
+plugins:
+  - serverless-iam-roles-per-function
+  
+
+
+````
+
+# Archivo serverless.yml
+
+Este archivo define la configuración de nuestra solución de servidorless para realizar consultas GET a una base de datos SQL Server en AWS.
+
+## Propiedades
+
+- `service`: Nombre de nuestro servicio de servidorless.
+- `provider`: Proveedor de nuestro servicio de servidorless (en este caso, AWS).
+- `functions`: Funciones que conforman nuestro servicio de servidorless. Cada función tiene las siguientes propiedades:
+  - `handler`: Archivo y nombre de la función que se ejecutará cuando se invoque esta función de servidorless.
+  - `events`: Eventos que dispararán la ejecución de esta función. En este caso, tenemos un evento de tipo `http`, que significa que nuestra función será invocada mediante una solicitud HTTP.
+  - `environment`: Variables de entorno que necesitará nuestra función para acceder a la base de datos SQL Server. Estas variables deben configurarse en el archivo `config.js`.
+
+Para más información sobre la sintaxis y las propiedades disponibles en el archivo `serverless.yml`, consulta la [documentación de Serverless Framework](https://www.serverless.com/framework/docs/providers/aws/guide/serverless.yml/).
+
